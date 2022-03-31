@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <title>우재윤-인터페이스구현</title>
+  <style>
+    .card {
+        transform: translate(0,0);
+        transition: transform 0.5s;
+    }
+    .card:hover {
+        transform: translate(0,-10px);
+    }
+</style>
+</head>
+<body>
+  <div id="app">
+    <v-app>
+        <v-app-bar app color="primary" dark>
+            <v-app-bar-nav-icon @click="ndraw=!ndraw"></v-app-bar-nav-icon>
+            <v-toolbar-title>부산 관광 안내</v-toolbar-title>
+          </v-app-bar>
+
+        <v-navigation-drawer v-model="ndraw" absolute temporary>
+            <v-toolbar flat height="70">
+              <v-list>
+                <v-list-item>
+                  <v-list-item-avatar>
+                    <v-icon>mdi-account-circle</v-icon>
+                  </v-list-item-avatar>
+                  <v-list-item-content>
+                    <v-list-item-title>즐거운 부산</v-list-item-title>
+                    <v-list-item-subtitle>다이나믹 부산</v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
+            </v-toolbar>
+            <v-divider></v-divider>
+            <v-list>
+              <v-list-item @clcik="" v-for="(item,i) in navList" :href="item.link" :key="i">
+                <v-list-item-action>
+                  <v-icon>{{ item.icon }}</v-icon>
+                </v-list-item-action>
+                <v-list-item-content>
+                  <v-list-item-title>{{ item.title }}</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+        </v-navigation-drawer>
+
+        <v-main>
+            <v-container>
+                <h1 class="display mt-5 d-flex justify-center">현재 인기있는 곳입니다</h1>
+                <p class="d-flex justify-center">추천을 통해 인기있는 곳을 골라주세요</p>
+                <v-row>
+                    <v-col cols="12" sm="6" v-for="(pic, i) in pictures" :key="i">
+                        <v-card class="card">
+                            <v-img :src="pic.src" height="250px"></v-img>
+                            <v-card-title>{{ pic.title }}</v-card-title>
+                            <v-card-actions>
+                                <h3>{{ pic.count }}</h3>
+                                <v-spacer></v-spacer>
+                                <v-btn color="success" @click="like(i)">추천</v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-col>
+                </v-row>
+            </v-container>
+            <v-container v-show="slide">
+                <v-card>
+                    <v-list>
+                        <v-slide-x-transition group>
+                            <v-list-item v-for="(li, i) in likelist" :key="i">{{ li+"를 추천합니다" }}</v-list-item>
+                        </v-slide-x-transition>
+                    </v-list>
+                </v-card>
+            </v-container>
+        </v-main>
+    </v-app>
+  </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script>
+     new Vue({
+      el: '#app',
+      vuetify: new Vuetify(),
+      data: {
+          ndraw: false,
+          navList: [{icon: "mdi-card-bulleted-outline", link: "#", title: "메인페이지"},
+          {icon: "mdi-content-paste", link: "#", title: "관광지소개"},
+          {icon: "mdi-check", link: "#", title: "추천명소"},],
+          pictures: [{count: 0, src: "./img/0.jpg", title: "해운대"},
+          {count: 0, src: "./img/1.jpg", title: "바다 도시 야경"},
+          {count: 0, src: "./img/2.jpg", title: "광안대교"},
+          {count: 0, src: "./img/3.jpg", title: "해운대 인어동상"}],
+          likelist: [],
+          slide: false
+      },
+    methods: {
+        like: function(i) {
+            this.slide=true;
+            this.likelist.push(this.pictures[i].title);
+            this.pictures[i].count++;
+        }
+      }
+    })
+  </script>
+</body>
+</html>
